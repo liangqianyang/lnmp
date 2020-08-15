@@ -1,0 +1,7 @@
+node_modules
+yarn.lock
+package.json
+mysql/data/*
+redis/data/*
+*.log
+.env
