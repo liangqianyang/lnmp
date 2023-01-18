@@ -6,7 +6,7 @@ services:
     ports:
       - ${HTTP_HOST}:80
     volumes:
-      - ${SOURCE_DIR}:/var/www/html/:rw
+      - ${SOURCE_DIR}:/var/www/:rw
       - ${NGINX_CONFD_DIR}:/etc/nginx/conf.d/:rw
       - ${NGINX_CONF_FILE}:/etc/nginx/nginx.conf:ro
       - ${NGINX_LOG_DIR}:/var/log/nginx/:rw
@@ -15,7 +15,7 @@ services:
     image: ${PHP_VERSION}
     container_name: lqy-php74
     volumes:
-      - ${SOURCE_DIR}:/var/www/html/:rw
+      - ${SOURCE_DIR}:/var/www/:rw
       - ${PHP_CONFIG_FILE}:/usr/local/etc/php/php.ini:ro
       - ${PHP_FPM_CONFIG_FILE}:/usr/local/etc/php-fpm.d/www.conf:rw
     cap_add:
@@ -29,13 +29,11 @@ services:
     volumes:
       - ${MYSQL_DATA_DIR}:/var/lib/mysql
       - ${MYSQL_CONF_FILE}:/etc/mysql/my.cnf
-#      - /etc/localtime:/etc/localtime:ro windows注释此项
+      - /etc/localtime:/etc/localtime:ro
     environment:
       TZ: Asia/Shanghai
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
-    command:
-      --default-authentication-plugin=mysql_native_password
-      --sql-mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION"
+    command: --default-authentication-plugin=mysql_native_password --sql-mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION"
     restart: always
   redis:
     container_name: lqy-redis
@@ -45,7 +43,7 @@ services:
     volumes:
       - ${REDIS_CONF_FILE}:/etc/redis/redis.conf
       - ${REDIS_DATA_DIR}:/data
-#      - /etc/localtime:/etc/localtime:ro windows注释此项
+      - /etc/localtime:/etc/localtime:ro
     command: redis-server /etc/redis/redis.conf
     environment:
       - TZ=Asia/Shanghai
@@ -57,4 +55,3 @@ networks:
   default:
     external:
       name: lqy-network
-
